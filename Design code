@@ -1,0 +1,22 @@
+module eight_bit_shift_register (
+  input wire clk,
+  input wire parallel_load,
+  input wire [7:0] parallel_input,
+  input wire rst_n, // Active-low asynchronous reset
+  output reg [7:0] serial_output
+);
+
+  reg [7:0] shift_register;
+
+  always @(posedge clk or negedge rst_n) begin
+    if (~rst_n) begin
+      shift_register <= 8'b00000000; // Asynchronous reset
+    end else if (parallel_load) begin
+      shift_register <= parallel_input; // Parallel load
+    end else begin
+      shift_register <= {shift_register[6:0], 1'b0}; // Shift left
+    end
+    serial_output <= shift_register[7];
+  end
+
+endmodule
