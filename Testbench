@@ -1,0 +1,46 @@
+module tb_eight_bit_shift_register;
+
+  reg clk, parallel_load, rst_n;
+  reg [7:0] parallel_input;
+  wire [7:0] serial_output;
+
+  eight_bit_shift_register uut (
+    .clk(clk),
+    .parallel_load(parallel_load),
+    .parallel_input(parallel_input),
+    .rst_n(rst_n),
+    .serial_output(serial_output)
+  );
+
+  initial begin
+    // Test 1: Shift register without parallel load or reset
+    clk = 0;
+    parallel_load = 0;
+    rst_n = 1;
+    #10 $display("Time=%0t clk=%b parallel_load=%b rst_n=%b parallel_input=%b serial_output=%b", $time, clk, parallel_load, rst_n, parallel_input, serial_output);
+
+    // Test 2: Parallel load data
+    parallel_load = 1;
+    parallel_input = 8'b11011011;
+    #10 $display("Time=%0t clk=%b parallel_load=%b rst_n=%b parallel_input=%b serial_output=%b", $time, clk, parallel_load, rst_n, parallel_input, serial_output);
+
+    // Test 3: Shift data
+    parallel_load = 0;
+    #10 $display("Time=%0t clk=%b parallel_load=%b rst_n=%b parallel_input=%b serial_output=%b", $time, clk, parallel_load, rst_n, parallel_input, serial_output);
+
+    // Test 4: Asynchronous reset
+    rst_n = 0;
+    #10 $display("Time=%0t clk=%b parallel_load=%b rst_n=%b parallel_input=%b serial_output=%b", $time, clk, parallel_load, rst_n, parallel_input, serial_output);
+
+    // Test 5: Release reset
+    rst_n = 1;
+    #10 $display("Time=%0t clk=%b parallel_load=%b rst_n=%b parallel_input=%b serial_output=%b", $time, clk, parallel_load, rst_n, parallel_input, serial_output);
+
+    // Add more test cases as needed
+
+    $finish;
+  end
+
+  always #5 clk = ~clk;
+
+endmodule
